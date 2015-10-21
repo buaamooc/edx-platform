@@ -232,11 +232,11 @@ class DiscussionTabSingleThreadTest(BaseDiscussionTestCase, DiscussionResponsePa
         self.setup_thread_page(thread_id)
         self.assertTrue(self.thread_page.is_discussion_body_visible())
         self.thread_page.wait_for(
-            self.thread_page.is_mathjax_preview_available(),
+            self.thread_page.is_mathjax_preview_available,
             description="MathJax Preview is rendered"
         )
         self.thread_page.wait_for(
-            self.thread_page.is_mathjax_rendered(),
+            self.thread_page.is_mathjax_rendered,
             description="MathJax is rendered"
         )
 
