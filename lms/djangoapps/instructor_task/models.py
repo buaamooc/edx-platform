@@ -349,12 +349,13 @@ class LocalFSReportStore(ReportStore):
     This lets us do the cheap thing locally for debugging without having to open
     up a separate URL that would only be used to send files in dev.
     """
-    def __init__(self, root_path):
+    def __init__(self, root_path, root_url):
         """
         Initialize with root_path where we're going to store our files. We
         will build a directory structure under this for each course.
         """
         self.root_path = root_path
+        self.root_url = root_url
         if not os.path.exists(root_path):
             os.makedirs(root_path)
 
@@ -370,11 +371,16 @@ class LocalFSReportStore(ReportStore):
             STORAGE_TYPE : "localfs"
             ROOT_PATH : /tmp/edx/report-downloads/
         """
-        return cls(getattr(settings, config_name).get("ROOT_PATH"))
+        return cls(getattr(settings, config_name).get("ROOT_PATH"), getattr(settings, config_name).get("ROOT_URL"))
 
     def path_to(self, course_id, filename):
         """Return the full path to a given file for a given course."""
         return os.path.join(self.root_path, urllib.quote(course_id.to_deprecated_string(), safe=''), filename)
+
+    def url_to(self, course_id, filename):
+        """Return the full path to a given file for a given course."""
+        return self.root_url + os.path.join('/', urllib.quote(urllib.quote(course_id.to_deprecated_string(), safe='')), filename)
+
 
     def store(self, course_id, filename, buff, config=None):  # pylint: disable=unused-argument
         """
@@ -413,10 +419,10 @@ class LocalFSReportStore(ReportStore):
         course_dir = self.path_to(course_id, '')
         if not os.path.exists(course_dir):
             return []
-        files = [(filename, os.path.join(course_dir, filename)) for filename in os.listdir(course_dir)]
-        files.sort(key=lambda (filename, full_path): os.path.getmtime(full_path), reverse=True)
+        files = [(filename, os.path.join(course_dir, filename), self.url_to(course_id, filename)) for filename in os.listdir(course_dir)]
+        files.sort(key=lambda (filename, full_path, url): os.path.getmtime(full_path), reverse=True)
 
         return [
-            (filename, ("file://" + urllib.quote(full_path)))
-            for filename, full_path in files
+            (filename, url)
+            for filename, full_path, url in files
         ]

@@ -231,7 +231,7 @@ from edxmako.shortcuts import marketing_link
             ##       or something allowing themes to do whatever they
             ##       want here (and on this whole page, really).
             % if self.stanford_theme_enabled():
-              <a href="http://twitter.com/intent/tweet?text=I+just+registered+for+${course.number}+${get_course_about_section(course, 'title')}!+(http://class.stanford.edu)" class="share">
+              <a href="http://service.weibo.com/share/share.php?title=I+just+registered+for+${course.number}+${get_course_about_section(course, 'title')}!+(http://class.stanford.edu)" class="share">
                 <i class="icon fa fa-twitter"></i><span class="sr">${_("Tweet that you've registered for this course")}</span>
               </a>
               <a href="mailto:?subject=Take%20a%20course%20at%20Stanford%20online!&body=I%20just%20registered%20for%20${course.number}%20${get_course_about_section(course, 'title')}+(http://class.stanford.edu)" class="share">
@@ -253,7 +253,7 @@ from edxmako.shortcuts import marketing_link
                         path=reverse('about_course', args=[course.id.to_deprecated_string()])
                     )
                 ).replace(u" ", u"+")
-                tweet_action = u"http://twitter.com/intent/tweet?text={tweet_text}".format(tweet_text=tweet_text)
+                tweet_action = u"http://service.weibo.com/share/share.php?title={tweet_text}".format(tweet_text=tweet_text)
 
                 facebook_link = microsite.get_value('course_about_facebook_link', settings.PLATFORM_FACEBOOK_ACCOUNT)
 
@@ -304,7 +304,11 @@ from edxmako.shortcuts import marketing_link
                 </span>
             </li>
             % endif
-
+            <li class="important-dates-item">
+                <i class="icon fa fa-info-circle"></i>
+                <p class="important-dates-item-title">${_("Total Enrolled")}</p>
+                <span class="important-dates-item-text start-date">${enrollment_counts['total']}</span>
+            </li>
           % if get_course_about_section(course, "effort"):
             <li class="important-dates-item"><i class="icon fa fa-pencil"></i><p class="important-dates-item-title">${_("Estimated Effort")}</p><span class="important-dates-item-text effort">${get_course_about_section(course, "effort")}</span></li>
           % endif

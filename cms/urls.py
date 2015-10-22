@@ -107,6 +107,7 @@ urlpatterns += patterns(
     url(r'^settings/advanced/{}$'.format(settings.COURSE_KEY_PATTERN), 'advanced_settings_handler'),
     url(r'^textbooks/{}$'.format(settings.COURSE_KEY_PATTERN), 'textbooks_list_handler'),
     url(r'^textbooks/{}/(?P<textbook_id>\d[^/]*)$'.format(settings.COURSE_KEY_PATTERN), 'textbooks_detail_handler'),
+    url(r'^local_videos/{}/{}?$'.format(settings.COURSE_KEY_PATTERN, settings.ASSET_KEY_PATTERN), 'local_videos_handler'),
     url(r'^videos/{}$'.format(settings.COURSE_KEY_PATTERN), 'videos_handler'),
     url(r'^video_encodings_download/{}$'.format(settings.COURSE_KEY_PATTERN), 'video_encodings_download'),
     url(r'^group_configurations/{}$'.format(settings.COURSE_KEY_PATTERN), 'group_configurations_list_handler'),
@@ -150,7 +151,7 @@ if settings.FEATURES.get('ENABLE_SERVICE_STATUS'):
         url(r'^status/', include('service_status.urls')),
     )
 
-if settings.FEATURES.get('AUTH_USE_CAS'):
+if settings.FEATURES.get('AUTH_USE_CAS') or settings.FEATURES.get('AUTH_ENABLE_CAS'):
     urlpatterns += (
         url(r'^cas-auth/login/$', 'external_auth.views.cas_login', name="cas-login"),
         url(r'^cas-auth/logout/$', 'django_cas.views.logout', {'next_page': '/'}, name="cas-logout"),

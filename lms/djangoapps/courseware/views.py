@@ -919,7 +919,8 @@ def course_about(request, course_id):
             'disable_courseware_header': True,
             'can_add_course_to_cart': can_add_course_to_cart,
             'cart_link': reverse('shoppingcart.views.show_cart'),
-            'pre_requisite_courses': pre_requisite_courses
+            'pre_requisite_courses': pre_requisite_courses,
+            'enrollment_counts':CourseEnrollment.objects.enrollment_counts(course.id)
         })
 
 

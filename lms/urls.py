@@ -516,7 +516,7 @@ if settings.FEATURES.get('AUTH_USE_SHIB'):
         url(r'^shib-login/$', 'external_auth.views.shib_login', name='shib-login'),
     )
 
-if settings.FEATURES.get('AUTH_USE_CAS'):
+if settings.FEATURES.get('AUTH_USE_CAS') or settings.FEATURES.get('AUTH_ENABLE_CAS'):
     urlpatterns += (
         url(r'^cas-auth/login/$', 'external_auth.views.cas_login', name="cas-login"),
         url(r'^cas-auth/logout/$', 'django_cas.views.logout', {'next_page': '/'}, name="cas-logout"),

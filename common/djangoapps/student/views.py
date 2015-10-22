@@ -1271,7 +1271,7 @@ def logout_user(request):
     # We do not log here, because we have a handler registered
     # to perform logging on successful logouts.
     logout(request)
-    if settings.FEATURES.get('AUTH_USE_CAS'):
+    if settings.FEATURES.get('AUTH_USE_CAS') or request.COOKIES.get('casloggedin'):
         target = reverse('cas-logout')
     else:
         target = '/'

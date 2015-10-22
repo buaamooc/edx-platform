@@ -33,6 +33,7 @@
          */
         modules: getModulesList([
             'js/factories/asset_index',
+            'js/factories/local_video_index',
             'js/factories/base',
             'js/factories/checklists',
             'js/factories/container',

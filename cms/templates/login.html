@@ -39,6 +39,10 @@ from django.utils.translation import ugettext as _
 
         <div class="form-actions">
           <button type="submit" id="submit" name="submit" class="action action-primary">${_("Sign In to {studio_name}").format(studio_name=settings.STUDIO_NAME)}</button>
+          % if settings.FEATURES.get('AUTH_ENABLE_CAS'):
+          <hr />
+          <button type="button" class="action action-primary" onclick="location.href='/cas-auth/login/'+(location.search==''?'?next=%2F':location.search);">${_("Sign in with CAS")}</button>
+          % endif
         </div>
 
         <!-- no honor code for CMS, but need it because we're using the lms student object -->

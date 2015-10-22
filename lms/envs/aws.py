@@ -307,14 +307,13 @@ SSL_AUTH_DN_FORMAT_STRING = ENV_TOKENS.get("SSL_AUTH_DN_FORMAT_STRING",
 
 # Django CAS external authentication settings
 CAS_EXTRA_LOGIN_PARAMS = ENV_TOKENS.get("CAS_EXTRA_LOGIN_PARAMS", None)
-if FEATURES.get('AUTH_USE_CAS'):
+if FEATURES.get('AUTH_USE_CAS') or FEATURES.get('AUTH_ENABLE_CAS'):
     CAS_SERVER_URL = ENV_TOKENS.get("CAS_SERVER_URL", None)
-    AUTHENTICATION_BACKENDS = (
+    AUTHENTICATION_BACKENDS += (
         'django.contrib.auth.backends.ModelBackend',
         'django_cas.backends.CASBackend',
     )
     INSTALLED_APPS += ('django_cas',)
-    MIDDLEWARE_CLASSES += ('django_cas.middleware.CASMiddleware',)
     CAS_ATTRIBUTE_CALLBACK = ENV_TOKENS.get('CAS_ATTRIBUTE_CALLBACK', None)
     if CAS_ATTRIBUTE_CALLBACK:
         import importlib

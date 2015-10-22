@@ -19,7 +19,7 @@ from django.core.urlresolvers import reverse
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 
-if settings.FEATURES.get('AUTH_USE_CAS'):
+if settings.FEATURES.get('AUTH_USE_CAS') or settings.FEATURES.get('AUTH_ENABLE_CAS'):
     from django_cas.views import login as django_cas_login
 
 from student.helpers import get_next_url_for_login_page
@@ -481,6 +481,19 @@ def cas_login(request, next_page=None, required=False):
         if not UserProfile.objects.filter(user=user):
             user_profile = UserProfile(name=user.username, user=user)
             user_profile.save()
+        if request.session.get_expire_at_browser_close():
+            max_age = None
+            expires = None
+        else:
+            import time
+            from django.utils.http import cookie_date
+            max_age = request.session.get_expiry_age()
+            expires = cookie_date(time.time() + max_age)
+        ret.set_cookie(
+            'casloggedin', 'true', max_age=max_age, expires=expires,
+            domain=settings.SESSION_COOKIE_DOMAIN, path='/',
+            secure=None, httponly=None
+        )
 
     return ret
 

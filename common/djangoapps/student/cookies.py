@@ -138,6 +138,10 @@ def delete_logged_in_cookies(response):
             path='/',
             domain=settings.SESSION_COOKIE_DOMAIN
         )
+    response.delete_cookie(
+        'casloggedin', path='/',
+        domain=settings.SESSION_COOKIE_DOMAIN,
+    )
 
     return response
 

@@ -926,6 +926,16 @@ MAX_ASSET_UPLOAD_FILE_SIZE_IN_MB = 10
 # a file that exceeds the above size
 MAX_ASSET_UPLOAD_FILE_SIZE_URL = ""
 
+### Size of chunks into which video uploads will be divided
+VIDEO_UPLOAD_CHUNK_SIZE_IN_MB = 100
+
+### Max size of video uploads to local file system
+MAX_VIDEO_UPLOAD_FILE_SIZE_IN_MB = 1000
+
+# FAQ url to direct users to if they upload
+# a video that exceeds the above size
+MAX_VIDEO_UPLOAD_FILE_SIZE_URL = ""
+
 ### Default value for entrance exam minimum score
 ENTRANCE_EXAM_MIN_SCORE_PCT = 50
 
