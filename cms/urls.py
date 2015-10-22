@@ -50,6 +50,10 @@ urlpatterns = patterns(
     url(r'^heartbeat$', include('heartbeat.urls')),
 
     url(r'^user_api/', include('openedx.core.djangoapps.user_api.legacy_urls')),
+
+    #FPGA online_lab
+    url(r'^online_lab/$', 'open_ended_grading.online_lab.Web'),
+    url(r'^up_code/$', 'open_ended_grading.online_lab.UpCode'),
 )
 
 # User creation and updating views

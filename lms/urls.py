@@ -86,6 +86,10 @@ urlpatterns = (
     url(r'^api/val/v0/', include('edxval.urls')),
 
     url(r'^api/commerce/', include('commerce.api.urls', namespace='commerce_api')),
+
+    #FPGA online_lab
+    url(r'^online_lab/$', 'open_ended_grading.online_lab.Web'),
+    url(r'^up_code/$', 'open_ended_grading.online_lab.UpCode'),
 )
 
 if settings.FEATURES["ENABLE_COMBINED_LOGIN_REGISTRATION"]:
