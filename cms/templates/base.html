@@ -36,6 +36,16 @@ import json
   </head>
 
   <body class="${static.dir_rtl()} <%block name='bodyclass'></%block> lang_${LANGUAGE_CODE}">
+    <!--[if lte IE 9]>
+    <script type="text/javascript">
+      var lang = (navigator.browserLanguage || navigator.language).toLowerCase();
+      if (lang.indexOf('zh') == 0) {
+        alert('您的浏览器不受支持，请改用 Internet Explorer 10 或更高版本、最新版本的 Firefox 或者最新版本的 Chrome 浏览器访问本网站！');
+      } else {
+        alert('Your browser is not supported. Please use Internet Explorer 10 or higher versions, lastest version of Firefox or lastest version of Chrome to visit our website!');
+      }
+    </script>
+    <![endif]-->
     <%block name="view_notes"></%block>
 
     <a class="nav-skip" href="#content">${_("Skip to main content")}</a>
