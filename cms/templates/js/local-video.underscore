@@ -9,11 +9,13 @@
 <td class="size-col">
     <%= video_size %>
 </td>
+<td class="run-col">
+    <%= run %>
+</td>
 <td class="embed-col">
     <ul>
         <li class="embed-url">
             <label>
-                <span class="label"><%= gettext('Studio:') %></span>
                 <input type="text" class="embeddable-xml-input" value="<%= portable_url %>" readonly>
             </label>
         </li>

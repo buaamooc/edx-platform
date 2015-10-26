@@ -930,7 +930,7 @@ MAX_ASSET_UPLOAD_FILE_SIZE_URL = ""
 VIDEO_UPLOAD_CHUNK_SIZE_IN_MB = 100
 
 ### Max size of video uploads to local file system
-MAX_VIDEO_UPLOAD_FILE_SIZE_IN_MB = 1000
+MAX_VIDEO_UPLOAD_FILE_SIZE_IN_MB = 2000
 
 # FAQ url to direct users to if they upload
 # a video that exceeds the above size

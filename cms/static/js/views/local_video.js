@@ -14,6 +14,7 @@ var AssetView = BaseView.extend({
     this.$el.html(this.template({
       display_name: this.model.get('display_name'),
       date_added: this.model.get('date_added'),
+      run: this.model.get('run'),
       url: this.model.get('url'),
       video_size: this.model.get('video_size'),
       portable_url: this.model.get('portable_url')

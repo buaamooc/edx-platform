@@ -30,7 +30,7 @@ define(["jquery", "underscore", "gettext", "js/views/baseview", "js/models/local
                 // set default file size for uploads via template var,
                 // and default to static old value if none exists
                 this.uploadChunkSizeInMBs = options.uploadChunkSizeInMBs || 100;
-                this.maxFileSizeInMBs = options.maxFileSizeInMBs || 1000;
+                this.maxFileSizeInMBs = options.maxFileSizeInMBs || 2000;
                 this.uploadChunkSizeInBytes = this.uploadChunkSizeInMBs * CONVERSION_FACTOR_MBS_TO_BYTES;
                 this.maxFileSizeInBytes = this.maxFileSizeInMBs * CONVERSION_FACTOR_MBS_TO_BYTES;
                 this.maxFileSizeRedirectUrl = options.maxFileSizeRedirectUrl || '';
@@ -92,6 +92,7 @@ define(["jquery", "underscore", "gettext", "js/views/baseview", "js/models/local
                 pagingView.registerSortableColumn('js-asset-name-col', gettext('Name'), 'display_name', 'asc');
                 pagingView.registerSortableColumn('js-asset-date-col', gettext('Date Added'), 'date_added', 'desc');
                 pagingView.registerSortableColumn('js-asset-size-col', gettext('Video Size'), 'video_size', 'desc');
+                pagingView.registerSortableColumn('js-asset-run-col', gettext('Course Run'), 'run', 'desc');
                 pagingView.setInitialSortColumn('js-asset-date-col');
                 pagingView.setPage(0);
                 return pagingView;

@@ -6,6 +6,7 @@ define(["backbone"], function(Backbone) {
     defaults: {
       display_name: "",
       date_added: "",
+      run: "",
       url: "",
       video_size: 0,
       portable_url: ""

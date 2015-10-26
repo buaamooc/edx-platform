@@ -30,8 +30,8 @@ from student.auth import has_course_author_access
 from xmodule.modulestore.exceptions import ItemNotFoundError
 
 __all__ = ['local_videos_handler']
-VIDEO_URL_BASE = '/media'
-VIDEO_PATH_BASE = '/edx/var/edxapp'
+VIDEO_URL_BASE = 'http://files.mooc.buaa.edu.cn/videos'
+VIDEO_PATH_BASE = '/edx/var/files/videos'
 
 
 # pylint: disable=unused-argument
@@ -134,17 +134,20 @@ def _local_get_videos_for_page(request, course_key, current_page, page_size, sor
     """
     start = current_page * page_size
     end = start + page_size
-    cache_name = 'videos:' + course_key.to_deprecated_string()
-    url_path = _local_add_slash(course_key.to_deprecated_string())
-    video_files = []
+    course_path = os.path.join(VIDEO_PATH_BASE, course_key.org, course_key.course)
+    url_path_base = course_key.org + '/' + course_key.course
+    cache_name = 'videos:' + course_key.org + '+' + course_key.course
     if cache.get(cache_name) is None:
-       for root, dirs, files in os.walk(VIDEO_PATH_BASE + VIDEO_URL_BASE + url_path):
-           for name in files:
-               st = os.stat(os.path.join(root, name))
-               video_files.append(_local_get_video_json(name, datetime.utcfromtimestamp(st.st_mtime), st.st_size, url_path + '/' + name))
-       cache.set(cache_name, video_files)
+        video_files = []
+        for run in os.listdir(course_path):
+            for name in os.listdir(os.path.join(course_path, run)):
+                full_path = os.path.join(course_path, run, name)
+                if os.path.isfile(full_path):
+                    st = os.stat(full_path)
+                    video_files.append(_local_get_video_json(name, datetime.utcfromtimestamp(st.st_mtime), st.st_size, run, url_path_base + '/' + run + '/' + name))
+        cache.set(cache_name, video_files)
     else:
-       video_files = cache.get(cache_name)
+        video_files = cache.get(cache_name)
 
     return [sorted(video_files, lambda a,b: cmp(a[sort], b[sort]) if ascending else cmp(b[sort], a[sort]))[start:end], len(video_files)]
 
@@ -182,11 +185,11 @@ def _local_upload_video(request, course_key):
     # keep things a bit more consistent
     upload_file = request.FILES['file']
     file_name = upload_file.name.replace('/', '_')
-    path_name = _local_add_slash(course_key.to_deprecated_string())
+    path_name = '/' + course_key.org + '/' + course_key.course + '/' + course_key.run
 
     content_loc = path_name + '/' + file_name
-    file_path = VIDEO_PATH_BASE + VIDEO_URL_BASE + content_loc
-    dir_path = VIDEO_PATH_BASE + VIDEO_URL_BASE + path_name
+    file_path = VIDEO_PATH_BASE + content_loc
+    dir_path = VIDEO_PATH_BASE + path_name
 
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
@@ -198,11 +201,11 @@ def _local_upload_video(request, course_key):
     else:
         _local_write_video_file(upload_file, file_path)
 
-    cache.delete('videos:' + course_key.to_deprecated_string())
+    cache.delete('videos:' + course_key.org + '+' + course_key.course)
 
     st = os.stat(file_path)
     response_payload = {
-        'asset': _local_get_video_json(upload_file.name, datetime.utcfromtimestamp(st.st_mtime), st.st_size, content_loc),
+        'asset': _local_get_video_json(upload_file.name, datetime.utcfromtimestamp(st.st_mtime), st.st_size, course_key.run, content_loc),
         'msg': _('Upload completed')
     }
 
@@ -222,12 +225,12 @@ def _local_update_video(request, course_key, video_key):
     if request.method == 'DELETE':
         # Make sure the item to delete actually exists.
         try:
-            file_path = VIDEO_PATH_BASE + VIDEO_URL_BASE + _local_add_slash(video_key)
+            file_path = VIDEO_PATH_BASE + _local_add_slash(video_key)
         except:
             return HttpResponseBadRequest()
         if os.path.exists(file_path):
             os.remove(file_path)
-            cache.delete('videos:' + course_key.to_deprecated_string())
+            cache.delete('videos:' + course_key.org + '+' + course_key.course)
             return JsonResponse()
         else:
             return JsonResponse(status=404)
@@ -244,7 +247,7 @@ def _local_update_video(request, course_key, video_key):
             return JsonResponse(modified_video, status=201)
 
 
-def _local_get_video_json(display_name, date, size, location):
+def _local_get_video_json(display_name, date, size, run, location):
     """
     Helper method for formatting the video information to send to client.
     """
@@ -252,6 +255,7 @@ def _local_get_video_json(display_name, date, size, location):
     return {
         'display_name': display_name,
         'date_added': get_default_time_display(date),
+        'run': run,
         'url': video_url,
         'video_size': size,
         'portable_url': video_url,
